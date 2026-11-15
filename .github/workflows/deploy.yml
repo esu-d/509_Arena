@@ -29,7 +29,7 @@ jobs:
           node-version: 20
 
       - name: 安裝套件
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: 自動打包前端靜態網頁
         run: npm run build
