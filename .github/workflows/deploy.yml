@@ -31,8 +31,10 @@ jobs:
       - name: 安裝套件
         run: npm install --legacy-peer-deps
 
-      - name: 自動打包前端靜態網頁
-        run: npm run build
+      - name: 自動打包前端靜態網頁 (含子目錄路徑修正)
+        run: |
+          sed -i "s|'/assets/aistudio/|'./assets/aistudio/|g" src/components/VoxelGraphics.tsx || true
+          npx vite build --base=./
 
       - name: 上傳打包成品
         uses: actions/upload-pages-artifact@v3
