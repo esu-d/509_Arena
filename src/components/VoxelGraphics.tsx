@@ -2,7 +2,7 @@ import React from 'react';
 import { StudentProfile, SubjectId } from '../game/types';
 import { AVATAR_CATALOG } from '../game/seedData';
 
-export const REF_IMAGE_URL = '/assets/aistudio/S__118906889_77783138.jpg';
+export const REF_IMAGE_URL = `${import.meta.env.BASE_URL}assets/aistudio/S__118906889_77783138.jpg`;
 
 /**
  * 3D方塊科技世界背景舞台：

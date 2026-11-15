@@ -71,15 +71,20 @@ export const TeacherAdminModal: React.FC<TeacherAdminModalProps> = ({
   const activeSeason =
     db.seasons.find((s) => s.id === db.activeSeasonId) || db.seasons[0];
 
+  // Change teacher password state
+  const [newPasswordInput, setNewPasswordInput] = useState('');
+  const [passwordSavedMsg, setPasswordSavedMsg] = useState('');
+
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passwordInput.trim() === db.teacherPassword || passwordInput.trim() === '509') {
+    const expectedPassword = db.teacherPassword || '509';
+    if (passwordInput.trim() === expectedPassword) {
       soundEngine.playCorrect();
       setUnlocked(true);
       setPasswordError('');
     } else {
       soundEngine.playWrong();
-      setPasswordError('密碼錯誤（預設教師密碼為 509）');
+      setPasswordError('密碼錯誤，請重新輸入教師管理密碼');
     }
   };
 
@@ -294,7 +299,7 @@ export const TeacherAdminModal: React.FC<TeacherAdminModalProps> = ({
             </div>
             <h3 className="text-2xl font-black">請輸入教師管理密碼</h3>
             <p className="text-sm text-sky-200">
-              為避免學生下課時間誤改題庫或賽季設定，進入後台需驗證密碼（預設密碼：<span className="font-mono font-black text-amber-400">509</span>）
+              為避免學生下課時間誤改題庫或賽季設定，進入後台需驗證教師密碼
             </p>
             <div>
               <label htmlFor="teacher-password-input" className="sr-only">
@@ -305,7 +310,7 @@ export const TeacherAdminModal: React.FC<TeacherAdminModalProps> = ({
                 type="password"
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
-                placeholder="輸入密碼 509"
+                placeholder="請輸入教師密碼"
                 className="w-full px-4 py-3 rounded-xl bg-[#071324] border-2 border-sky-400/60 text-center text-2xl font-mono font-black text-white focus:outline-none focus:border-orange-400"
               />
             </div>
@@ -314,15 +319,8 @@ export const TeacherAdminModal: React.FC<TeacherAdminModalProps> = ({
             )}
             <div className="flex gap-2">
               <button
-                type="button"
-                onClick={() => setPasswordInput('509')}
-                className="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-sky-300 cursor-pointer"
-              >
-                填入預設 509
-              </button>
-              <button
                 type="submit"
-                className="flex-1 py-3 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 font-black text-lg cursor-pointer"
+                className="w-full py-3 rounded-xl bg-orange-500 hover:bg-orange-400 text-slate-950 font-black text-lg cursor-pointer"
               >
                 驗證進入後台
               </button>
@@ -837,6 +835,44 @@ export const TeacherAdminModal: React.FC<TeacherAdminModalProps> = ({
                           className="w-5 h-5 accent-orange-500"
                         />
                       </label>
+
+                      <div className="pt-4 border-t border-slate-800 space-y-2">
+                        <label className="block text-xs font-bold text-sky-300">
+                          修改教師後台密碼（避免學生猜到預設密碼 509）
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="password"
+                            value={newPasswordInput}
+                            onChange={(e) => {
+                              setNewPasswordInput(e.target.value);
+                              setPasswordSavedMsg('');
+                            }}
+                            placeholder="輸入新密碼"
+                            className="flex-1 px-3 py-2 rounded-lg bg-[#0B1D36] border border-slate-700 text-white font-mono"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (!newPasswordInput.trim()) return;
+                              soundEngine.playCorrect();
+                              const updated = newPasswordInput.trim();
+                              onUpdateDb((prev) => ({
+                                ...prev,
+                                teacherPassword: updated,
+                              }));
+                              setNewPasswordInput('');
+                              setPasswordSavedMsg('密碼已更新！');
+                            }}
+                            className="px-4 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-black text-xs cursor-pointer"
+                          >
+                            儲存新密碼
+                          </button>
+                        </div>
+                        {passwordSavedMsg && (
+                          <div className="text-xs font-bold text-emerald-400">{passwordSavedMsg}</div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
