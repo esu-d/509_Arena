@@ -1,0 +1,6 @@
+{
+  "name": "509競技場 — 五年級雙人學習PK系統",
+  "description": "專為五年級509班電子白板設計的方塊科技風雙人學習PK競技場，涵蓋國語、數學、社會、英文、生活探索五大領域，支援兩週賽季排行與教師題庫管理。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
